@@ -1,0 +1,24 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "==4.0.5"
+django-allauth = "*"
+django-phonenumber-field = {extras = ["phonenumbers"], version = "*"}
+djangorestframework = "*"
+dj-rest-auth = "*"
+django-colorfield = "*"
+pillow = "*"
+django-truncate = "*"
+djangorestframework-simplejwt = "*"
+sendgrid = "*"
+celery = "*"
+ipython = "*"
+xhtml2pdf = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"

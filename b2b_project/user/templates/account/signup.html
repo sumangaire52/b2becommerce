@@ -64,7 +64,7 @@
                     <p class="text-center small">Enter your personal details to create account</p>
                   </div>
 
-                  <form class="row g-3 needs-validation" novalidate method="post" action = "{% url 'account_signup' %}" >
+                  <form class="row g-3 needs-validation" novalidate method="post" action = "{% url 'user:customer_signup' %}" >
                     {% csrf_token %}
                     <div class="col-12">
                       <label for="yourName" class="form-label">Your Name</label>

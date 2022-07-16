@@ -8,14 +8,13 @@ from datetime import timedelta, date
 from .models import Product
 from orders.models import Order
 from user.models import User
+from user.forms import SalesmanSignupForm
 from .decorators import admin_required
 from .forms import AdminProfileEditform, AddProductForm
 from .utils import (get_customer_report, 
                     get_revenue_report,
                     get_sales_report,
                     get_top_selling_product)
-
-
 
 def home(request):
     return render(request, 'shop/home.html')
@@ -112,7 +111,8 @@ def admin_profile(request, edit = None, change_password = None):
 
     return render(request, 'shop/admin_profile.html', {'change_password_form':change_password_form})
 
-
+@login_required
+@admin_required
 def product_list(request):
     products = Product.objects.all()
     page = request.GET.get('page', 1)
@@ -126,6 +126,8 @@ def product_list(request):
         products = paginator.page(paginator.num_pages)
     return render(request, 'shop/product_list.html', {'products':products})
 
+@login_required
+@admin_required
 def add_product(request):
     if request.method == 'POST':
         form = AddProductForm(request.POST, request.FILES)
@@ -136,18 +138,46 @@ def add_product(request):
         form = AddProductForm()
     return render(request, 'shop/add_product.html', {'form':form})
 
+@login_required
+@admin_required
 def product_detail(request, id):
     product = get_object_or_404(Product, id = 1)
     return render(request,'shop/product_detail.html', {'product':product})
 
+@login_required
+@admin_required
 def list_customer(request):
-    return render(request, 'shop/customer_list.html')
+    customers = User.objects.filter(is_customer = True, is_active = True)
+    return render(request, 'shop/customer_list.html', {'customers':customers})
+
+
+@login_required
+@admin_required
+def block_customer(request,user_id):
+    customer = get_object_or_404(User, id = user_id)
+    customer.is_active = False
+    customer.save()
+    return redirect('shop:customer_list')
 
 def customer_requests(request):
-    return render(request, 'shop/customer_requests.html')
+    customer_requests = User.objects.filter(is_customer = True, is_active = False)
+    return render(request, 'shop/customer_requests.html', {'customer_requests':customer_requests})
+
+def approve_customer(request, user_id):
+    customer = get_object_or_404(User, id = user_id)
+    customer.is_active = True
+    customer.save()
+    return redirect('shop:customer_requests')
+
+def remove_customer(request, user_id):
+    customer = get_object_or_404(User, id = user_id)
+    customer.delete()
+    return redirect('shop:customer_requests')
 
 def list_salesman(request):
     return render(request, 'shop/salesman_list.html')
 
+@login_required
+@admin_required
 def add_salesman(request):
     return render(request, 'shop/add_salesman.html')

@@ -6,12 +6,11 @@ from django.db import transaction
 
 
 class CustomSignupView(SignupView):
-  template_name = 'account/signup.html'
+  template_name = ''
   success_url = ''  # profile specific success url
   form_class = None
   profile_class = None  # profile class goes here
 
-  @transaction.atomic
   def form_valid(self, form):
     response = super(CustomSignupView, self).form_valid(form)
     user_type = self.profile_class(user=self.user, 

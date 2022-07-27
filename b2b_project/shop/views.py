@@ -1,14 +1,14 @@
 import math
+from datetime import timedelta, date
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from allauth.account.forms import ChangePasswordForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from datetime import timedelta, date
 
-from .models import Product
+
 from orders.models import Order
 from user.models import User
-from user.forms import SalesmanSignupForm
+from .models import Product
 from .decorators import admin_required
 from .forms import AdminProfileEditform, AddProductForm
 from .utils import (get_customer_report, 
@@ -16,14 +16,15 @@ from .utils import (get_customer_report,
                     get_sales_report,
                     get_top_selling_product)
 
+
 def home(request):
     return render(request, 'shop/home.html')
+
 
 @login_required
 @admin_required
 def admin_dashboard(request):
     end_date = date.today() + timedelta(days=1)
-
     #get total orders of desired date range 
     order_duration = request.GET.get('duration', '1')
     start_date = date.today() - timedelta(days = int(order_duration))
@@ -58,22 +59,16 @@ def admin_dashboard(request):
         customer_percent_change = None
     
     report_timeframe = int(request.GET.get('report',7))
-
     #get the visualized report of sales, customers and revenue using apexchart.js
     dates = list(get_sales_report(report_timeframe).keys())
     dates.reverse()
-
     revenue_report = list(get_revenue_report(report_timeframe).values())
     revenue_report.reverse()
-
     customer_report = list(get_customer_report(report_timeframe).values())
     customer_report.reverse()
-
     sales_report = list(get_sales_report(report_timeframe).values())
     sales_report.reverse()
-
     recent_orders = Order.objects.all()[:50]
-
     top_selling_timeframe = int(request.GET.get('timeframe',1))
     top_selling_products = get_top_selling_product(top_selling_timeframe)
 
@@ -94,6 +89,7 @@ def admin_dashboard(request):
                                                          'top_selling_products':top_selling_products,
                                                          'top_selling_timeframe':top_selling_timeframe,})
 
+
 @login_required
 @admin_required
 def admin_profile(request, edit = None, change_password = None):
@@ -111,6 +107,7 @@ def admin_profile(request, edit = None, change_password = None):
 
     return render(request, 'shop/admin_profile.html', {'change_password_form':change_password_form})
 
+
 @login_required
 @admin_required
 def product_list(request):
@@ -126,6 +123,7 @@ def product_list(request):
         products = paginator.page(paginator.num_pages)
     return render(request, 'shop/product_list.html', {'products':products})
 
+
 @login_required
 @admin_required
 def add_product(request):
@@ -138,11 +136,13 @@ def add_product(request):
         form = AddProductForm()
     return render(request, 'shop/add_product.html', {'form':form})
 
+
 @login_required
 @admin_required
 def product_detail(request, id):
     product = get_object_or_404(Product, id = 1)
     return render(request,'shop/product_detail.html', {'product':product})
+
 
 @login_required
 @admin_required
@@ -159,25 +159,66 @@ def block_customer(request,user_id):
     customer.save()
     return redirect('shop:customer_list')
 
+
+@login_required
+@admin_required
 def customer_requests(request):
     customer_requests = User.objects.filter(is_customer = True, is_active = False)
     return render(request, 'shop/customer_requests.html', {'customer_requests':customer_requests})
 
+
+@login_required
+@admin_required
 def approve_customer(request, user_id):
     customer = get_object_or_404(User, id = user_id)
     customer.is_active = True
     customer.save()
     return redirect('shop:customer_requests')
 
+
+@login_required
+@admin_required
 def remove_customer(request, user_id):
     customer = get_object_or_404(User, id = user_id)
     customer.delete()
     return redirect('shop:customer_requests')
 
-def list_salesman(request):
-    return render(request, 'shop/salesman_list.html')
 
 @login_required
 @admin_required
-def add_salesman(request):
-    return render(request, 'shop/add_salesman.html')
+def salesman_requests(request):
+    salesman_requests = User.objects.filter(is_salesman = True, is_active = False)
+    return render(request, 'shop/salesman_requests.html', {'salesman_requests':salesman_requests})
+
+
+@login_required
+@admin_required
+def approve_salesman(request, user_id):
+    customer = get_object_or_404(User, id = user_id)
+    customer.is_active = True
+    customer.save()
+    return redirect('shop:salesman_requests')
+
+
+@login_required
+@admin_required
+def remove_salesman(request, user_id):
+    customer = get_object_or_404(User, id = user_id)
+    customer.delete()
+    return redirect('shop:salesman_requests')
+
+
+@login_required
+@admin_required
+def list_salesman(request):
+    salesmen = User.objects.filter(is_salesman = True, is_active = True)
+    return render(request, 'shop/salesman_list.html', {'salesmen':salesmen})
+
+
+@login_required
+@admin_required
+def block_salesman(request,user_id):
+    salesman = get_object_or_404(User, id = user_id)
+    salesman.is_active = False
+    salesman.save()
+    return redirect('shop:salesman_list')

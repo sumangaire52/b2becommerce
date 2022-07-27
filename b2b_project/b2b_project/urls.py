@@ -23,6 +23,9 @@ urlpatterns = [
     path('accounts/', include('user.urls')),
     path('accounts/', include('allauth.urls')),
     #path('api/', include('api.urls')),
+    path('', include('dashboard.urls')),
     path('', include('shop.urls')),
     path('', include('orders.urls')),
+    path('', include('accounting.urls')),
+    path('', include('hrm.urls')),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

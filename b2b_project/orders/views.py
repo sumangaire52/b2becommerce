@@ -37,7 +37,8 @@ def completed_orders(request):
     return render(request,'orders/completed_orders.html', {'completed_orders':completed_orders})
 
 def cancelled_orders(request):
-    return render(request,'orders/cancelled_orders.html')
+    cancelled_orders = Order.objects.filter(order_status = 'cancelled')
+    return render(request,'orders/cancelled_orders.html', {'cancelled_orders':cancelled_orders})
 
 def order_invoice(request, order_id):
     order = get_object_or_404(Order, id = order_id)

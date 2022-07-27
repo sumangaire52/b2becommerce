@@ -50,11 +50,14 @@ INSTALLED_APPS = [
     'colorfield',
 
     # local apps
-    #'api',
     'user',
     'shop',
     'cart',
     'orders',
+    'dashboard',
+    'hrm',
+    'accounting',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -160,7 +163,7 @@ AUTHENTICATION_BACKENDS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kathmandu'
 
 USE_I18N = True
 

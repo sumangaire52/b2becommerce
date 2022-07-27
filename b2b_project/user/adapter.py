@@ -5,7 +5,7 @@ class CustomAdapter(DefaultAccountAdapter):
     def get_login_redirect_url(self, request):
 
         assert request.user.is_authenticated
-
+        
         if request.user.is_admin:
             url = 'shop:admin_dashboard'
         

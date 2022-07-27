@@ -10,12 +10,14 @@ class CustomerSignupView(CustomSignupView):
    success_url = 'account_login'
    profile_class = Customer
    form_class = CustomerSignupForm
+   template_name = 'account/signup.html'
 
 
 class SalesmanSignupView(CustomSignupView):
-    success_url = reverse_lazy('shop:salesman_list')
+    success_url = 'account_login'
     profile_class = Salesman
     form_class = SalesmanSignupForm
+    template_name = 'account/salesman_signup.html'
 
 class AdminSignupView(CustomSignupView):
     success_url = 'account_login'

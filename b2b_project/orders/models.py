@@ -1,21 +1,21 @@
 from django.db import models
 
-# Create your models here.
-from django.db import models
 from user.models import User
 from shop.models import Product
+
 
 class OrderQuerySet(models.QuerySet):
     def get_revenue(self, start_date, end_date):
         return sum([order.get_total_cost() for order in Order.objects.filter(created__range = [start_date, end_date])])
 
+
 class OrderManager(models.Manager):
     def get_queryset(self):
         return OrderQuerySet(self.model, using=self._db)
 
+
 class Order(models.Model):
     PAYMENT_CHOICES = [('credit', 'Credit'),('cod', 'Cash on Delivery')]
-
     ORDER_STATUS_CHOICES = [('unverified', 'Unverified'),
                             ('verified','Verified'),
                             ('on_delivery', 'On Delivery'),

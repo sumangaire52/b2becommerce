@@ -440,8 +440,8 @@
             data-bs-parent="#sidebar-nav"
           >
             <li>
-              <a href="{% url 'shop:add_salesman' %}">
-                <i class="bi bi-circle"></i><span>Add Salesman</span>
+              <a href="{% url 'shop:salesman_requests' %}">
+                <i class="bi bi-circle"></i><span>Salesman Requests</span>
               </a>
             </li>
             <li>
@@ -501,9 +501,38 @@
         <li class="nav-item">
           <a class="nav-link collapsed" href="users-profile.html">
             <i class="bi bi-person"></i>
-            <span>Reports</span>
+            <span>Suppliers</span>
           </a>
         </li>
+
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="{% url 'accounting:list_credits' %}">
+            <i class="bi bi-person"></i>
+            <span>Credits</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-gem"></i><span>HRM</span><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+              <a href="{% url 'hrm:employee_list' %}">
+                <i class="bi bi-circle"></i><span>Employees</span>
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'hrm:attendance' %}">
+                <i class="bi bi-circle"></i><span>Attendance</span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="bi bi-circle"></i><span>Payroll</span>
+              </a>
+            </li>
+          </ul>
+        </li><!-- End Icons Nav -->
 
         <li class="nav-item">
           <a class="nav-link collapsed" href="users-profile.html">
@@ -511,9 +540,8 @@
             <span>Reviews</span>
           </a>
         </li>
-
         <li class="nav-item">
-          <a class="nav-link collapsed" href="users-profile.html">
+          <a class="nav-link collapsed" href="{% url 'shop:admin_profile'%}">
             <i class="bi bi-person"></i>
             <span>Profile</span>
           </a>

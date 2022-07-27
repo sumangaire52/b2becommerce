@@ -1,5 +1,7 @@
 from django import forms
-from user.models import Admin
+from django.db import transaction
+
+from user.models import User, Admin, Salesman
 from shop.models import Product
 
 class AdminProfileEditform(forms.ModelForm): 
@@ -27,4 +29,17 @@ class AddProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = '__all__'
+
+class AddSalesmanForm(forms.Form):
+
+    class Meta:
+        model = User
+        fields = ['email','password']
     
+    @transaction.atomic
+    def save(self, request,):
+        user = super(AddSalesmanForm, self).save()
+        user.is_salesman = True
+        user.save()
+        salesman = Salesman(user = user, )
+        return None
